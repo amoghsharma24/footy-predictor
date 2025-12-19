@@ -1,1 +1,1 @@
-# footy-predictor
+#README
