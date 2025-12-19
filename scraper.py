@@ -12,53 +12,51 @@ def scrape_season(year):
     
     matches = []
     
-    # afltables uses simple tables with match data so no special classes will be needed
+    # Parsing tables with tr and td elements
     for table in soup.find_all('table'):
-        text = table.get_text()
+        rows = table.find_all('tr')
         
-        # Quick filter: match tables have "won by" text and score patterns
-        if 'won by' not in text or '.' not in text:
-            continue
-            
-        lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
-        
-        # Each match table has exactly 2 lines: home team and then away team
-        if len(lines) != 2:
+        # Match tables have exactly 2 rows
+        if len(rows) != 2:
             continue
         
-        home_line = lines[0]
-        away_line = lines[1]
+        # Each row should have 4 cells: team, quarters, score, details
+        row1_cells = rows[0].find_all('td')
+        row2_cells = rows[1].find_all('td')
         
-        # Extracting team names they are always before the first number
-        home_match = re.match(r'([A-Za-z\s]+?)\s+\d', home_line)
-        away_match = re.match(r'([A-Za-z\s]+?)\s+\d', away_line)
-        
-        if not home_match or not away_match:
+        if len(row1_cells) != 4 or len(row2_cells) != 4:
             continue
         
-        home_team = home_match.group(1).strip()
-        away_team = away_match.group(1).strip()
+        # Extracting data from cells
+        home_team = row1_cells[0].get_text(strip=True)
+        home_score = row1_cells[2].get_text(strip=True)
+        away_team = row2_cells[0].get_text(strip=True)
+        away_score = row2_cells[2].get_text(strip=True)
         
-        # Getting final scores last number before the date/result text
-        home_score = re.search(r'(\d+)(?=\w{3}\s+\d{2}-)', home_line)
-        away_score = re.search(r'(\d+)(?=\w+\s+won)', away_line)
+        # Getting date and venue from row 1, cell 3
+        details = row1_cells[3].get_text(strip=True)
         
-        if not home_score or not away_score:
-            continue
-        
-        # Extracting date and venue
-        date_match = re.search(r'(\w{3}\s+\d{2}-\w{3}-\d{4})', home_line)
+        # Extracting date
+        date_match = re.search(r'(\w{3}\s+\d{2}-\w{3}-\d{4})', details)
         date = date_match.group(1) if date_match else "Unknown"
         
-        venue_match = re.search(r'Venue:\s*(.+?)$', home_line)
+        # Extracting venue
+        venue_match = re.search(r'Venue:\s*(.+?)$', details)
         venue = venue_match.group(1).strip() if venue_match else "Unknown"
+        
+        # Validating scores are numbers
+        try:
+            home_score_int = int(home_score)
+            away_score_int = int(away_score)
+        except ValueError:
+            continue
         
         matches.append({
             'Date': date,
             'Home Team': home_team,
             'Away Team': away_team,
-            'Home Score': int(home_score.group(1)),
-            'Away Score': int(away_score.group(1)),
+            'Home Score': home_score_int,
+            'Away Score': away_score_int,
             'Venue': venue
         })
     
