@@ -71,7 +71,7 @@ if __name__ == "__main__":
         
         if matches:
             df = pd.DataFrame(matches)
-            filename = f'afl_{year}.csv'
+            filename = f'data/afl_{year}.csv'
             df.to_csv(filename, index=False)
             print(f"Saved {len(matches)} matches to {filename}\n")
         else:

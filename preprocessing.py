@@ -6,7 +6,7 @@ def generate_all_ladders(start_year, end_year):
     ladders = {}
     
     for year in range(start_year, end_year + 1):
-        matches = pd.read_csv(f'afl_{year}.csv')
+        matches = pd.read_csv(f'data/afl_{year}.csv')
         ladder = calculate_ladder(matches)
         ladders[year] = ladder
         print(f"Generated {year} ladder")
@@ -83,14 +83,14 @@ if __name__ == "__main__":
     print(f"Features: {list(training_data.columns)}")
     
     # Saving training data
-    training_data.to_csv('training_data.csv', index=False)
-    print("\n✓ Saved training_data.csv")
+    training_data.to_csv('results/training_data.csv', index=False)
+    print("\n✓ Saved results/training_data.csv")
     
     # Preparing 2025 data for prediction
     print("\nStep 3: Preparing 2025 data for prediction...")
     prediction_features = create_features(ladders[2025], 2025)
-    prediction_features.to_csv('prediction_features_2025.csv', index=False)
-    print("✓ Saved prediction_features_2025.csv")
+    prediction_features.to_csv('results/prediction_features_2025.csv', index=False)
+    print("✓ Saved results/prediction_features_2025.csv")
     
     print("\n" + "="*80)
     print("SUMMARY")

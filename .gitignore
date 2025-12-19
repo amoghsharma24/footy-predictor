@@ -60,9 +60,9 @@ node_modules/
 *.pyc
 *.pyo
 
-# Scraped data files
-afl_*.csv
-*.csv
+# Data folders
+data/
+results/
 
 # Test scripts
 tests/

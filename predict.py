@@ -4,15 +4,24 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
 
-def prepare_training_data():
+def prepare_training_data(use_advanced=True):
     """Loading and preparing training data for the model"""
     print("Loading training data...")
-    df = pd.read_csv('training_data.csv')
     
-    # Selecting feature columns (excluding Team, Year, and target)
-    feature_cols = ['Position', 'Wins', 'Draws', 'Losses', 'Win_Rate', 
-                    'Percentage', 'Avg_Points_For', 'Avg_Points_Against', 
-                    'Premiership_Points']
+    if use_advanced:
+        df = pd.read_csv('results/training_data_advanced.csv')
+        feature_cols = ['Position', 'Wins', 'Draws', 'Losses', 'Win_Rate', 
+                        'Percentage', 'Avg_Points_For', 'Avg_Points_Against', 
+                        'Premiership_Points', 'form_last_5', 'home_win_rate',
+                        'away_win_rate', 'home_away_diff', 'scoring_trend',
+                        'consistency', 'big_wins_rate', 'big_losses_rate']
+        print("Using ADVANCED features")
+    else:
+        df = pd.read_csv('results/training_data.csv')
+        feature_cols = ['Position', 'Wins', 'Draws', 'Losses', 'Win_Rate', 
+                        'Percentage', 'Avg_Points_For', 'Avg_Points_Against', 
+                        'Premiership_Points']
+        print("Using BASIC features")
     
     X = df[feature_cols]
     y = df['Next_Year_Position']
@@ -51,7 +60,7 @@ def train_model(X, y):
 def predict_2026(model, feature_cols):
     """Predicting 2026 ladder based on 2025 stats"""
     print("\nLoading 2025 data for prediction...")
-    df_2025 = pd.read_csv('prediction_features_2025.csv')
+    df_2025 = pd.read_csv('results/prediction_features_2025.csv')
     
     # Preparing features
     X_pred = df_2025[feature_cols]
@@ -112,5 +121,5 @@ if __name__ == "__main__":
     print("="*80 + "\n")
     
     # Saving predictions
-    predictions.to_csv('predicted_2026_ladder.csv', index=False)
-    print("✓ Saved predicted_2026_ladder.csv\n")
+    predictions.to_csv('results/predicted_2026_ladder.csv', index=False)
+    print("✓ Saved results/predicted_2026_ladder.csv\n")

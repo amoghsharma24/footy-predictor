@@ -85,7 +85,7 @@ if __name__ == "__main__":
         exit(1)
     
     try:
-        matches = pd.read_csv(f'afl_{year}.csv')
+        matches = pd.read_csv(f'data/afl_{year}.csv')
     except FileNotFoundError:
         print(f"Error: No data found for {year}. Run scraper.py first.")
         exit(1)
