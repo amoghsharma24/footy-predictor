@@ -4,11 +4,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
 
-def prepare_training_data(use_advanced=True):
+def prepare_training_data(feature_set='enhanced'):
     """Loading and preparing training data for the model"""
     print("Loading training data...")
     
-    if use_advanced:
+    if feature_set == 'enhanced':
+        df = pd.read_csv('results/training_data_enhanced.csv')
+        # Automatically getting all feature columns except Team, Year, Next_Year_Position
+        exclude_cols = ['Team', 'Year', 'Next_Year_Position']
+        feature_cols = [col for col in df.columns if col not in exclude_cols]
+        print("Using ENHANCED features (rolling averages, streaks, opponent strength)")
+    elif feature_set == 'advanced':
         df = pd.read_csv('results/training_data_advanced.csv')
         feature_cols = ['Position', 'Wins', 'Draws', 'Losses', 'Win_Rate', 
                         'Percentage', 'Avg_Points_For', 'Avg_Points_Against', 
@@ -16,7 +22,8 @@ def prepare_training_data(use_advanced=True):
                         'away_win_rate', 'home_away_diff', 'scoring_trend',
                         'consistency', 'big_wins_rate', 'big_losses_rate']
         print("Using ADVANCED features")
-    else:
+    else:  
+        # basic
         df = pd.read_csv('results/training_data.csv')
         feature_cols = ['Position', 'Wins', 'Draws', 'Losses', 'Win_Rate', 
                         'Percentage', 'Avg_Points_For', 'Avg_Points_Against', 
@@ -57,10 +64,16 @@ def train_model(X, y):
     
     return model
 
-def predict_2026(model, feature_cols):
+def predict_2026(model, feature_cols, feature_set='enhanced'):
     """Predicting 2026 ladder based on 2025 stats"""
     print("\nLoading 2025 data for prediction...")
-    df_2025 = pd.read_csv('results/prediction_features_2025.csv')
+    
+    if feature_set == 'enhanced':
+        df_2025 = pd.read_csv('results/prediction_features_2025_enhanced.csv')
+    elif feature_set == 'advanced':
+        df_2025 = pd.read_csv('results/prediction_features_2025_advanced.csv')
+    else:
+        df_2025 = pd.read_csv('results/prediction_features_2025.csv')
     
     # Preparing features
     X_pred = df_2025[feature_cols]
@@ -86,24 +99,27 @@ if __name__ == "__main__":
     print("AFL 2026 LADDER PREDICTION")
     print("="*80)
     
+    # Choose feature set: 'basic', 'advanced', or 'enhanced'
+    FEATURE_SET = 'enhanced'
+    
     # Preparing training data
-    X, y, feature_cols = prepare_training_data()
+    X, y, feature_cols = prepare_training_data(feature_set=FEATURE_SET)
     
     # Training model
     model = train_model(X, y)
     
     # Feature importance
-    print("\nFeature Importance:")
+    print("\nTop 10 Most Important Features:")
     feature_importance = pd.DataFrame({
         'Feature': feature_cols,
         'Importance': model.feature_importances_
     }).sort_values('Importance', ascending=False)
     
-    for _, row in feature_importance.iterrows():
-        print(f"  {row['Feature']:<25} {row['Importance']:.4f}")
+    for idx, (_, row) in enumerate(feature_importance.head(10).iterrows(), 1):
+        print(f"  {idx}. {row['Feature']:<30} {row['Importance']:.4f}")
     
     # Making 2026 predictions
-    predictions = predict_2026(model, feature_cols)
+    predictions = predict_2026(model, feature_cols, feature_set=FEATURE_SET)
     
     print("\n" + "="*80)
     print("PREDICTED 2026 AFL LADDER")
@@ -122,4 +138,4 @@ if __name__ == "__main__":
     
     # Saving predictions
     predictions.to_csv('results/predicted_2026_ladder.csv', index=False)
-    print("✓ Saved results/predicted_2026_ladder.csv\n")
+    print("Saved results/predicted_2026_ladder.csv\n")
