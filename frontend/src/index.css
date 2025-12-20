@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-afl-primary: #E31837;
+  --color-afl-secondary: #003057;
+}
+
+body {
+  background-color: #f3f4f6;
+  min-height: 100vh;
+}
