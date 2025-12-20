@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from ladder_calc import calculate_ladder
+from ml.ladder_calc import calculate_ladder
 
 
 def calculate_form(matches_df, team, last_n=5):

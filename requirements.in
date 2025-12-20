@@ -3,3 +3,9 @@ beautifulsoup4
 pandas
 scikit-learn
 numpy
+xgboost
+joblib
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart

@@ -1,5 +1,5 @@
 import pandas as pd
-from ladder_calc import calculate_ladder
+from ml.ladder_calc import calculate_ladder
 
 def generate_all_ladders(start_year, end_year):
     """Generating ladder for each season from start to end year"""
