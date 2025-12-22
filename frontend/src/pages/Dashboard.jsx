@@ -67,8 +67,8 @@ const Dashboard = () => {
         </div>
 
         <div className="glass-panel rounded-xl p-6 relative overflow-hidden group">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 group-hover:opacity-20 transition-opacity">
-            {topTeam && <img src={getTeamLogo(topTeam.team)} alt={topTeam.team} className="h-72 w-72" />}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 group-hover:opacity-10 transition-opacity">
+            {topTeam && <img src={getTeamLogo(topTeam.team)} alt={topTeam.team} className="h-[480px] w-[480px]" />}
           </div>
           <p className="text-sm text-gray-400 mb-1 uppercase tracking-wider font-medium">Predicted Premier</p>
           <div className="flex items-center space-x-3 mt-2 relative z-10">
