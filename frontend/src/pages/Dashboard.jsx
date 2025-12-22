@@ -67,8 +67,8 @@ const Dashboard = () => {
         </div>
 
         <div className="glass-panel rounded-xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            {topTeam && <img src={getTeamLogo(topTeam.team)} alt={topTeam.team} className="h-24 w-24" />}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 group-hover:opacity-20 transition-opacity">
+            {topTeam && <img src={getTeamLogo(topTeam.team)} alt={topTeam.team} className="h-72 w-72" />}
           </div>
           <p className="text-sm text-gray-400 mb-1 uppercase tracking-wider font-medium">Predicted Premier</p>
           <div className="flex items-center space-x-3 mt-2 relative z-10">
@@ -98,7 +98,7 @@ const Dashboard = () => {
           <p className="text-xs text-gray-500 mt-1">{features?.total_features || 0} active features</p>
           <div className="mt-4 pt-4 border-t border-white/10">
             <p className="text-xs text-gray-400 leading-relaxed">
-              <span className="text-white font-semibold">Random Forest</span> is an ensemble learning method that creates multiple decision trees and merges their predictions. It's highly accurate for AFL predictions because it handles non-linear relationships between features like team form, scoring efficiency, and defensive strength. The model trains on <span className="text-white font-semibold">{features?.total_features || 0} carefully selected metrics</span> spanning team performance, player statistics, and match context.
+              <span className="text-white font-semibold">Gradient Boosting</span> is an advanced machine learning technique that builds models sequentially, with each new model correcting errors from previous ones. It excels at AFL predictions by capturing complex patterns in team performance, player statistics, and match dynamics. The model trains on <span className="text-white font-semibold">{features?.total_features || 0} carefully selected metrics</span> including rolling averages, opponent strength, list composition, elite player counts, and scoring efficiency.
             </p>
           </div>
         </div>

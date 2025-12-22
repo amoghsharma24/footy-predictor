@@ -195,9 +195,22 @@ def calculate_momentum(matches_df, team):
     return {'momentum': momentum}
 
 
+def load_player_metrics(year):
+    """Load player metrics for a given year"""
+    try:
+        player_metrics = pd.read_csv(f'data/team_season_metrics_{year}.csv')
+        return player_metrics
+    except FileNotFoundError:
+        print(f"Warning: No player metrics found for {year}")
+        return None
+
+
 def create_enhanced_features(matches_df, ladder_df, year):
     """Creating comprehensive feature set with all enhancements"""
     features = []
+    
+    # Load player metrics if available
+    player_metrics = load_player_metrics(year)
     
     for _, row in ladder_df.iterrows():
         team = row['Team']
@@ -230,13 +243,56 @@ def create_enhanced_features(matches_df, ladder_df, year):
         # Momentum
         momentum = calculate_momentum(matches_df, team)
         
+        # Player metrics (if available)
+        player_features = {}
+        if player_metrics is not None:
+            team_player_data = player_metrics[player_metrics['team'] == team]
+            if not team_player_data.empty:
+                player_row = team_player_data.iloc[0]
+                player_features = {
+                    # Total team statistics
+                    'total_disposals': player_row.get('total_disposals', 0),
+                    'total_goals': player_row.get('total_goals', 0),
+                    'total_tackles': player_row.get('total_tackles', 0),
+                    'total_clearances': player_row.get('total_clearances', 0),
+                    'total_inside_50s': player_row.get('total_inside_50s', 0),
+                    'total_marks': player_row.get('total_marks', 0),
+                    'total_hitouts': player_row.get('total_hitouts', 0),
+                    
+                    # Elite player counts
+                    'players_20plus_goals': player_row.get('players_20plus_goals', 0),
+                    'players_30plus_goals': player_row.get('players_30plus_goals', 0),
+                    'players_40plus_goals': player_row.get('players_40plus_goals', 0),
+                    'players_300plus_disposals': player_row.get('players_300plus_disposals', 0),
+                    'players_400plus_disposals': player_row.get('players_400plus_disposals', 0),
+                    'players_500plus_disposals': player_row.get('players_500plus_disposals', 0),
+                    'players_100plus_tackles': player_row.get('players_100plus_tackles', 0),
+                    
+                    # List depth
+                    'total_players_used': player_row.get('total_players_used', 0),
+                    'players_with_10plus_games': player_row.get('players_with_10plus_games', 0),
+                    'players_with_15plus_games': player_row.get('players_with_15plus_games', 0),
+                    'players_with_20plus_games': player_row.get('players_with_20plus_games', 0),
+                    
+                    # Brownlow medal contention
+                    'total_brownlow_votes': player_row.get('total_brownlow_votes', 0),
+                    'players_with_brownlow_votes': player_row.get('players_with_brownlow_votes', 0),
+                    'top_brownlow_vote_getter': player_row.get('top_brownlow_vote_getter', 0),
+                    
+                    # Efficiency metrics
+                    'goal_accuracy': player_row.get('goal_accuracy', 0),
+                    'contested_poss_ratio': player_row.get('contested_poss_ratio', 0),
+                    'free_kick_differential': player_row.get('free_kick_differential', 0),
+                }
+        
         # Combining all features
         enhanced = {
             **basic,
             **rolling,
             **streaks,
             **opp_strength,
-            **momentum
+            **momentum,
+            **player_features
         }
         
         features.append(enhanced)
