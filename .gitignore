@@ -64,7 +64,9 @@ node_modules/
 
 # Data folders
 data/
-results/
+results/*.csv
+# Don't ignore the trained model - needed for deployment
+!results/best_model_latest.pkl
 
 # Test scripts
 tests/
