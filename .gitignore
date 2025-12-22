@@ -39,7 +39,9 @@ dmypy.json
 
 # Environment files
 .env
-.env.*
+.env.local
+.env.development.local
+.env.test.local
 
 # OS
 .DS_Store
