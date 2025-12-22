@@ -1,67 +1,33 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Trophy, BarChart2, History, Activity } from 'lucide-react';
 
 const Navbar = () => {
-  const location = useLocation();
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-  const isActive = (path) => {
-    return location.pathname === path;
+  const scrollToLadder = () => {
+    document.getElementById('ladder')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3">
-              <Trophy className="h-7 w-7 text-afl-primary" />
-              <div>
-                <span className="font-semibold text-lg text-gray-900">AFL Ladder Predictor</span>
-              </div>
-            </Link>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-1">
-              <Link
-                to="/"
-                className={`px-4 py-2 text-sm font-medium flex items-center space-x-2 transition-colors ${
-                  isActive('/') 
-                    ? 'text-afl-primary border-b-2 border-afl-primary' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <Activity className="h-4 w-4" />
-                <span>Dashboard</span>
-              </Link>
-              
-              <Link
-                to="/history"
-                className={`px-4 py-2 text-sm font-medium flex items-center space-x-2 transition-colors ${
-                  isActive('/history') 
-                    ? 'text-afl-primary border-b-2 border-afl-primary' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <History className="h-4 w-4" />
-                <span>History</span>
-              </Link>
-              
-              <Link
-                to="/teams"
-                className={`px-4 py-2 text-sm font-medium flex items-center space-x-2 transition-colors ${
-                  isActive('/teams') 
-                    ? 'text-afl-primary border-b-2 border-afl-primary' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <BarChart2 className="h-4 w-4" />
-                <span>Teams</span>
-              </Link>
-            </div>
-          </div>
-        </div>
+    <nav className="flex justify-center pt-6 pb-8 sticky top-0 z-50">
+      <div className="glass-panel px-6 py-3 rounded-full border border-white/10 flex items-center gap-6">
+        <button 
+          onClick={scrollToTop}
+          className="font-bold text-xl text-gray-400 hover:text-white tracking-tight transition-colors"
+        >
+          Home
+        </button>
+        <span className="font-bold text-2xl text-white tracking-tight relative">
+          AFL Predictor
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent blur-sm"></span>
+        </span>
+        <button 
+          onClick={scrollToLadder}
+          className="font-bold text-xl text-gray-400 hover:text-white tracking-tight transition-colors"
+        >
+          Ladder
+        </button>
       </div>
     </nav>
   );
