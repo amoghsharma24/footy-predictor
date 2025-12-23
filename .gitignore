@@ -63,7 +63,9 @@ node_modules/
 *.pyo
 
 # Data folders
-data/
+# Allow AFL data CSVs and team metrics for deployment
+!data/afl_*.csv
+!data/team_season_metrics_*.csv
 results/*.csv
 # Don't ignore the trained model - needed for deployment
 !results/best_model_latest.pkl
